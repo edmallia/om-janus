@@ -7,10 +7,8 @@ import requests
 from requests.auth import HTTPDigestAuth
 
 from janus import __app_name__, __version__, alert_configs_cli
-from janus.old.config import config_parser as conf
 
 from janus.logging import logger, setDebugLogLevel
-from janus.old import config 
 
 app = typer.Typer()
 
@@ -53,7 +51,7 @@ def main(
 ): 
     logger.info("Starting janus ...")
     logger.debug("[DEBUG LOGGING ENABLED]")
-    return config.init_app()
+    
 
 
 

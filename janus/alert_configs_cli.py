@@ -7,7 +7,6 @@ import requests
 from requests.auth import HTTPDigestAuth
 
 from janus import __app_name__, __version__
-from janus.old.config import config_parser as conf
 
 from janus.common import confirm_option_callback
 from janus.logging import logger
@@ -16,7 +15,6 @@ import copy
 import json
 
 import questionary
-from janus.old import config
 from janus.projects import fetch_projects
 
 app = typer.Typer()
