@@ -17,5 +17,4 @@ def confirm_option_callback(ctx: typer.Context, param: typer.CallbackParam, valu
                 return confirmed == 'True'
             else:
                 return confirmed
-    elif (ctx.get_parameter_source(param.name) in [ParameterSource.PROMPT]):
-        return value
+    return value
