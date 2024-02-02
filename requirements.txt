@@ -1,0 +1,6 @@
+click==8.0.4
+questionary==2.0.1
+Requests==2.31.0
+rich==13.7.0
+typer==0.9.0
+typer_config==1.4.0
