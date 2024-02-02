@@ -30,7 +30,7 @@ def _debug_logging_callback(value: bool) -> None:
         setDebugLogLevel()
 
 @app.callback()
-@use_yaml_config(default_value="config.yaml")
+# @use_yaml_config(default_value="config.yaml")
 def main(
     version: Optional[bool] = typer.Option(
         None,
@@ -49,7 +49,7 @@ def main(
         rich_help_panel="Customization and Utils"
     )
 ): 
-    logger.info("Starting janus ...")
+    logger.debug("Starting janus ...")
     logger.debug("[DEBUG LOGGING ENABLED]")
     
 

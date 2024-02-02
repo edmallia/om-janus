@@ -17,17 +17,17 @@ import json
 import questionary
 from janus.projects import fetch_projects
 
-app = typer.Typer()
+app = typer.Typer(help="Import/Export Alert Configs")
 
 @app.command()
-@use_yaml_config(default_value="config.yaml") #TODO find a way to not load this if running with --help
+@use_yaml_config() #TODO find a way to not load this if running with --help
 def export(
-    sourceUrl: str = typer.Option(str, "--sourceUrl", prompt="Source Ops Manager URL", callback=confirm_option_callback),
-    sourceUsername: str = typer.Option( str, "--sourceUsername", prompt="Source Ops Manager API Key", callback=confirm_option_callback),
-    sourceApiKey: str = typer.Option( str, "--sourceApiKey", prompt="Source Ops Manager API Key", callback=confirm_option_callback),
-    outputFile: str = typer.Option( str, "--outputFile", prompt="Output file (can be used in import process)", callback=confirm_option_callback),
+    sourceUrl: str = typer.Option(str, "--sourceUrl", prompt="Source Ops Manager URL", callback=confirm_option_callback, help="Source Ops Manager URL e.g. https://opsmanager.example.com", show_default=False),
+    sourceUsername: str = typer.Option( str, "--sourceUsername", prompt="Source Ops Manager Username", callback=confirm_option_callback, help="Source Ops Manager Username", show_default=False),
+    sourceApiKey: str = typer.Option( str, "--sourceApiKey", prompt="Source Ops Manager API Key", callback=confirm_option_callback, help="Source Ops Manager API Key", show_default=False),
+    outputFile: str = typer.Option( str, "--outputFile", prompt="Output file (can be used in import process)", callback=confirm_option_callback, help="Output file (can be used in import process)", show_default=False),
 ) -> None:
-    """Export Alert Configs to the specified output file"""    
+    """Export Alert Configs to the specified output file using an Organization Key. The process will first obtain all the Projects in the Organization and provide the user a choice of which Project to export the Alert Configs from."""    
     projects = fetch_projects(sourceUrl, sourceUsername, sourceApiKey)
 
     choices = []
@@ -46,15 +46,18 @@ def export(
 
 
 @app.command(name="import")
-@use_yaml_config(default_value="config.yaml")
+@use_yaml_config()
 def import_(
-    destinationUrl: str = typer.Option(str, "--destinationUrl", prompt="Destination Ops Manager URL", callback=confirm_option_callback),
-    destinationUsername: str = typer.Option( str, "--destinationUsername", prompt="Destination Ops Manager API Key", callback=confirm_option_callback),
-    destinationApiKey: str = typer.Option( str, "--destinationApiKey", prompt="Destination Ops Manager API Key", callback=confirm_option_callback),
-    inputFile: str = typer.Option( str, "--inputFile", prompt="Destination Ops Manager API Key", callback=confirm_option_callback),
-    detectAndSkipDuplicates: bool = typer.Option( True, "--detectAndSkipDuplicates", prompt="Detect already existing Alert Configs created on the destination project i.e. avoid creation of duplicate Alert Configs", callback=confirm_option_callback),
+    destinationUrl: str = typer.Option(str, "--destinationUrl", prompt="Destination Ops Manager URL", callback=confirm_option_callback, help="Destination Ops Manager URL e.g. https://opsmanager.example.com", show_default=False),
+    destinationUsername: str = typer.Option( str, "--destinationUsername", prompt="Destination Ops Manager API Key", callback=confirm_option_callback, help="Destination Ops Manager Username", show_default=False),
+    destinationApiKey: str = typer.Option( str, "--destinationApiKey", prompt="Destination Ops Manager API Key", callback=confirm_option_callback, help="Destination Ops Manager API Key", show_default=False),
+    inputFile: str = typer.Option( str, "--inputFile", prompt="Input file generated from the export process", callback=confirm_option_callback, help="Input file generated from the export process", show_default=False),
+    detectAndSkipDuplicates: bool = typer.Option( True, "--detectAndSkipDuplicates",
+                                                 prompt="Detect already existing Alert Configs created on the destination project i.e. avoid creation of duplicate Alert Configs", 
+                                                 callback=confirm_option_callback, 
+                                                 help="Detect already existing Alert Configs created on the destination project i.e. avoid creation of duplicate Alert Configs", show_default=True),
 ) -> None:
-    """Import Alert Configs from the specified input file"""
+    """Import Alert Configs from the specified input file. The process will first obtain all the Projects in the destination Organization on the Destination Ops Manager and using this information, will allow the user to import Alert Configs into the same project (if it exists) or a different one"""
     import_alert_configs(inputFile, destinationUrl, destinationUsername, destinationApiKey, detectAndSkipDuplicates)
 
 
